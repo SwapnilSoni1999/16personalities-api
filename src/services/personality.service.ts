@@ -9,7 +9,6 @@ import {
 import { replaceMap } from "@/utils/replaceMap"
 import session from "@/utils/session"
 import fs from "fs"
-import redisService from "./redis.service"
 import { HttpError } from "@/utils/httpError"
 
 const startSession = async (ip: string) => {
@@ -20,34 +19,17 @@ const startSession = async (ip: string) => {
     throw new HttpError(500, "No cookies found")
   }
 
-  await redisService.saveCookies(ip, res.config.jar)
   return res.data
 }
 
 const getSession = async (ip: string) => {
-  const cookies = await redisService.getCookies(ip)
-
-  if (!cookies) {
-    throw new HttpError(500, "No cookies found")
-  }
-
-  const res = await session.get(routes["api.session"], {
-    jar: cookies,
-  })
+  const res = await session.get(routes["api.session"])
 
   return res.data
 }
 
-const getPersonalityTest = async (ip: string): Promise<Question[]> => {
-  const cookies = await redisService.getCookies(ip)
-
-  if (!cookies) {
-    throw new HttpError(500, "No cookies found")
-  }
-
-  const res = await session.get(`${BASE_URL}/free-personality-test`, {
-    jar: cookies,
-  })
+const getPersonalityTest = async (): Promise<Question[]> => {
+  const res = await session.get(`${BASE_URL}/free-personality-test`)
   fs.writeFileSync("test.html", res.data)
   const regex = new RegExp(/(:questions=")+([[\S\s]*])(")/, "gm")
   const matches = regex.exec(res.data)
@@ -79,17 +61,7 @@ const getPersonalityTest = async (ip: string): Promise<Question[]> => {
   }))
 }
 
-const getTestResults = async (
-  ip: string,
-  submissionData: Submission[],
-  gender: Gender
-) => {
-  const cookies = await redisService.getCookies(ip)
-
-  if (!cookies) {
-    throw new HttpError(500, "No cookies found")
-  }
-
+const getTestResults = async (submissionData: Submission[], gender: Gender) => {
   const payload = {
     extraData: [],
     gender,
@@ -100,14 +72,9 @@ const getTestResults = async (
 
   const res = await session.post<GetTestResultsPayload>(
     routes["test-results"],
-    payload,
-    {
-      jar: cookies,
-    }
+    payload
   )
-  const res2 = await session.post(res.data.redirect, payload, {
-    jar: cookies,
-  })
+  const res2 = await session.post(res.data.redirect, payload)
 
   // console.log(res2.data)
   // fs.writeFileSync("test-results.html", res2.data)

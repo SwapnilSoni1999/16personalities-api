@@ -1,69 +1,27 @@
-import redisClient from "@/redis"
 import personalityService from "@/services/personality.service"
 import { Gender, Submission } from "@/types"
+import testValidator from "@/validators/test.validator"
 import { Request, Response } from "express"
+import { z } from "zod"
 
-const authenticate = async (req: Request, res: Response) => {
-  const ipAddress = req.ip
-
-  if (!ipAddress) {
-    return res.status(400).json({
-      message: "IP address not found",
-    })
-  }
-
-  await personalityService.startSession(ipAddress)
-  return res.json({
-    message: "Authenticated",
-  })
+const getQuestions = async (req: Request, res: Response) => {
+  const questions = await personalityService.getPersonalityTest()
+  res.json(questions)
 }
 
-const getSession = async (req: Request, res: Response) => {
-  const ipAddress = req.ip
-
-  if (!ipAddress) {
-    return res.status(400).json({
-      message: "IP address not found",
-    })
-  }
-
-  const session = await personalityService.getSession(ipAddress)
-
-  res.json(session)
-}
-
-const getRandom = async (req: Request, res: Response) => {
-  const ipAddress = req.ip
-
-  if (!ipAddress) {
-    return res.status(400).json({
-      message: "IP address not found",
-    })
-  }
-
-  const questions = await personalityService.getPersonalityTest(ipAddress)
-
-  const answers: Submission[] = questions.map((question) => {
-    const randomOption =
-      question.options[Math.floor(Math.random() * question.options.length)]
-
-    return {
-      answer: randomOption.value,
-      text: question.text,
-    }
-  })
-
-  const results = await personalityService.getTestResults(
-    ipAddress,
-    answers,
-    Gender.Male
+const submit = async (
+  req: Request<any, any, z.infer<typeof testValidator.submission>>,
+  res: Response
+) => {
+  const { answers, gender } = req.body
+  const result = await personalityService.getTestResults(
+    answers as Submission[],
+    gender
   )
-
-  res.json(results)
+  res.json(result)
 }
 
 export default {
-  authenticate,
-  getSession,
-  getRandom,
+  getQuestions,
+  submit,
 }

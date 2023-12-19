@@ -1,11 +1,8 @@
 import express, { Request, Response, NextFunction } from "express"
 import cors from "cors"
 import morgan from "morgan"
-import "./redis"
 import routes from "./routes"
 import { PORT } from "@/config"
-import personalityService from "./services/personality.service"
-import redisClient from "./redis"
 import { HttpError } from "./utils/httpError"
 
 const app = express()
@@ -18,14 +15,6 @@ app.use(morgan("dev"))
 app.use("/api", routes)
 
 app.listen(PORT, async () => {
-  await redisClient
-    .on("error", (err) => {
-      console.log("Error " + err)
-    })
-    .connect()
-    .then(() => {
-      console.log("Redis client connected")
-    })
   console.log(`Server running on port ${PORT}`)
 })
 
