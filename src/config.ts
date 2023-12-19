@@ -451,7 +451,4 @@ const routeConfig = {
 
 export const routes: typeof routeConfig = routeConfig
 
-export const REDIS_URL =
-  "rediss://red-cm11n8mn7f5s73e3bm4g:TPvM3IsxF8cUbYUbHpGyQh6z1QUrRiqh@oregon-redis.render.com:6379"
-
 export const PORT = 3000
