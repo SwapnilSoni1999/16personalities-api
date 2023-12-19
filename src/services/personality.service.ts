@@ -9,15 +9,45 @@ import {
 import { replaceMap } from "@/utils/replaceMap"
 import session from "@/utils/session"
 import fs from "fs"
+import redisService from "./redis.service"
+import { HttpError } from "@/utils/httpError"
 
-const startSession = async () => {
+const startSession = async (ip: string) => {
   await session.get(BASE_URL)
   const res = await session.get(routes["api.session"])
-  //   console.log(res)
+
+  if (!res.config.jar) {
+    throw new HttpError(500, "No cookies found")
+  }
+
+  await redisService.saveCookies(ip, res.config.jar)
+  return res.data
 }
 
-const getPersonalityTest = async (): Promise<Question[]> => {
-  const res = await session.get(`${BASE_URL}/free-personality-test`)
+const getSession = async (ip: string) => {
+  const cookies = await redisService.getCookies(ip)
+
+  if (!cookies) {
+    throw new HttpError(500, "No cookies found")
+  }
+
+  const res = await session.get(routes["api.session"], {
+    jar: cookies,
+  })
+
+  return res.data
+}
+
+const getPersonalityTest = async (ip: string): Promise<Question[]> => {
+  const cookies = await redisService.getCookies(ip)
+
+  if (!cookies) {
+    throw new HttpError(500, "No cookies found")
+  }
+
+  const res = await session.get(`${BASE_URL}/free-personality-test`, {
+    jar: cookies,
+  })
   fs.writeFileSync("test.html", res.data)
   const regex = new RegExp(/(:questions=")+([[\S\s]*])(")/, "gm")
   const matches = regex.exec(res.data)
@@ -49,12 +79,17 @@ const getPersonalityTest = async (): Promise<Question[]> => {
   }))
 }
 
-const getSessionData = async () => {
-  const res = await session.get(routes["api.session"])
-  return res.data
-}
+const getTestResults = async (
+  ip: string,
+  submissionData: Submission[],
+  gender: Gender
+) => {
+  const cookies = await redisService.getCookies(ip)
 
-const getTestResults = async (submissionData: Submission[], gender: Gender) => {
+  if (!cookies) {
+    throw new HttpError(500, "No cookies found")
+  }
+
   const payload = {
     extraData: [],
     gender,
@@ -65,12 +100,17 @@ const getTestResults = async (submissionData: Submission[], gender: Gender) => {
 
   const res = await session.post<GetTestResultsPayload>(
     routes["test-results"],
-    payload
+    payload,
+    {
+      jar: cookies,
+    }
   )
-  const res2 = await session.post(res.data.redirect, payload)
+  const res2 = await session.post(res.data.redirect, payload, {
+    jar: cookies,
+  })
 
-  console.log(res2.data)
-  fs.writeFileSync("test-results.html", res2.data)
+  // console.log(res2.data)
+  // fs.writeFileSync("test-results.html", res2.data)
 
   const regex = new RegExp(/(:test-results=")+({[\S\s]*})(")/, "gm")
 
@@ -94,4 +134,5 @@ export default {
   startSession,
   getPersonalityTest,
   getTestResults,
+  getSession,
 }
