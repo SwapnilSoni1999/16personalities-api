@@ -4,8 +4,7 @@ import morgan from "morgan"
 import routes from "./routes"
 import { PORT } from "@/config"
 import { HttpError } from "./utils/httpError"
-import swaggerSpec from "./swaggerConfig"
-import swaggerUi from "swagger-ui-express"
+import path from "path"
 
 const app = express()
 
@@ -15,7 +14,10 @@ app.use(express.urlencoded({ extended: false }))
 app.use(morgan("dev"))
 
 app.use("/api", routes)
-app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerSpec))
+
+app.use("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "../public/api-doc.html"))
+})
 
 app.listen(PORT, async () => {
   console.log(`Server running on port ${PORT}`)

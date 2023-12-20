@@ -6,52 +6,8 @@ import { Router } from "express"
 
 const router = Router()
 
-/**
- * @swagger
- * /api/personality/questions:
- *   get:
- *     summary: Get personality test questions
- *     description: Get personality test questions
- *     responses:
- *       200:
- *         description: OK
- */
 router.get("/questions", catchAsync(personalityController.getQuestions))
 
-/**
- * @swagger
- * /api/personality/submit:
- *   post:
- *     summary: Submit personality test
- *     description: Submit personality test with answers and gender
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               answers:
- *                 type: array
- *                 items:
- *                   type: object
- *                   properties:
- *                     text:
- *                       type: string
- *                       description: The text of the answer
- *                     answer:
- *                       type: number
- *                       description: The numeric value of the answer
- *               gender:
- *                 type: string
- *                 enum:
- *                   - male
- *                   - female
- *                 description: Gender of the individual taking the test
- *     responses:
- *       200:
- *         description: OK
- */
 router.post(
   "/submit",
   validator({ body: testValidator.submission }),
