@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon -r tsconfig-paths/register src/app.ts",
     "build": "tsc",
-    "start": "node -r tsconfig-paths/register build/app.js"
+    "start": "node -r tsconfig-paths/register dist/app.js"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
