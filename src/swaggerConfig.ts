@@ -10,6 +10,7 @@ const options: swaggerJSDoc.Options = {
     },
     basePath: "/", // Base URL of your API
   },
+
   apis: [path.join(__dirname, "routes/*.routes.ts")],
 }
 

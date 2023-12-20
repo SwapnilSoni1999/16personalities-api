@@ -23,8 +23,9 @@ router.get("/questions", catchAsync(personalityController.getQuestions))
  * /api/personality/submit:
  *   post:
  *     summary: Submit personality test
- *     description: Submit personality test
+ *     description: Submit personality test with answers and gender
  *     requestBody:
+ *       required: true
  *       content:
  *         application/json:
  *           schema:
@@ -37,10 +38,16 @@ router.get("/questions", catchAsync(personalityController.getQuestions))
  *                   properties:
  *                     text:
  *                       type: string
+ *                       description: The text of the answer
  *                     answer:
  *                       type: number
+ *                       description: The numeric value of the answer
  *               gender:
  *                 type: string
+ *                 enum:
+ *                   - male
+ *                   - female
+ *                 description: Gender of the individual taking the test
  *     responses:
  *       200:
  *         description: OK
