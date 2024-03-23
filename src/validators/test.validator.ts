@@ -4,7 +4,7 @@ import { z } from "zod"
 const submission = z.object({
   answers: z.array(
     z.object({
-      text: z.string(),
+      id: z.string(),
       answer: z.number(),
     })
   ),

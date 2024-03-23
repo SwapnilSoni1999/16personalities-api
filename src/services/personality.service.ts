@@ -28,7 +28,7 @@ const getSession = async (ip: string) => {
   return res.data
 }
 
-const getPersonalityTest = async (): Promise<Question[]> => {
+const getPersonalityTest = async (): Promise<Array<Question>> => {
   const res = await session.get(`${BASE_URL}/free-personality-test`)
   fs.writeFileSync("test.html", res.data)
   const regex = new RegExp(/(:questions=")+([[\S\s]*])(")/, "gm")
@@ -56,16 +56,23 @@ const getPersonalityTest = async (): Promise<Question[]> => {
   ]
 
   return questions.map((question: any) => ({
+    id: Buffer.from(question.text).toString("base64url"),
     text: question.text,
     options: defaultOptions,
   }))
 }
 
 const getTestResults = async (submissionData: Submission[], gender: Gender) => {
+  const questions: Array<Omit<Submission, "id"> & { text: string }> =
+    submissionData.map((s) => ({
+      text: Buffer.from(s.id, "base64url").toString(),
+      answer: s.answer,
+    }))
+
   const payload = {
     extraData: [],
     gender,
-    questions: submissionData,
+    questions,
     teamInviteKey: "",
     inviteCode: "",
   }

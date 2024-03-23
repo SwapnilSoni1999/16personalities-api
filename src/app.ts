@@ -19,14 +19,14 @@ app.use("/", (req, res) => {
   res.sendFile(path.join(__dirname, "../public/api-doc.html"))
 })
 
-app.listen(PORT, async () => {
-  console.log(`Server running on port ${PORT}`)
-})
-
 app.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
   res.status(err.status || 500).json({
     message: err.message,
   })
+})
+
+app.listen(PORT, async () => {
+  console.log(`Server running on port ${PORT}`)
 })
 
 export default app

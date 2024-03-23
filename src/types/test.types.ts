@@ -4,12 +4,13 @@ export interface QuestionOption {
 }
 
 export interface Question {
+  id: string
   text: string
   options: QuestionOption[]
 }
 
 export interface Submission {
-  text: string
+  id: string
   answer: number
 }
 
