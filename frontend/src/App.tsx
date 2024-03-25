@@ -20,7 +20,7 @@ function App() {
     <>
       <main className="w-full h-screen flex flex-col">
         <Navbar />
-        <div className="flex-grow bg-16pBlue pb-24">
+        <div className="flex-grow bg-16pBlue pb-24 px-4">
           <div className="flex w-full gap-y-5 flex-col py-10 items-center">
             <div className="flex flex-col gap-y-7 my-32 text-center">
               <h1 className="text-5xl font-semibold text-white">
@@ -40,7 +40,7 @@ function App() {
               </p>
             </div>
 
-            <Card className="max-w-[75%] w-full flex flex-col gap-y-5">
+            <Card className="max-w-full md:max-w-[75%] w-full flex flex-col gap-y-5">
               <h3 className="text-xl text-16pPurple flex items-center gap-x-4 font-medium">
                 GET &nbsp; /api/personality/questions
                 <Button
@@ -89,7 +89,7 @@ function App() {
               </div>
             </Card>
             <Card
-              className="max-w-[75%] w-full flex flex-col gap-y-5"
+              className="max-w-full md:max-w-[75%] w-full flex flex-col gap-y-5"
               color="blue"
             >
               <h3 className="text-xl text-16pBlue flex items-center gap-x-4 font-medium">

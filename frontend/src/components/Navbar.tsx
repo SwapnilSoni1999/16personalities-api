@@ -5,7 +5,7 @@ import Button from "./Button"
 const Navbar = () => {
   return (
     <nav className="flex flex-col w-full">
-      <div className="w-full flex items-center justify-between py-6 px-12 bg-white">
+      <div className="w-full flex items-center justify-between py-6 px-3 md:px-12 bg-white">
         <h1 className="text-3xl">
           <span className="text-16pPurple font-bold">16</span>
           Personalities
