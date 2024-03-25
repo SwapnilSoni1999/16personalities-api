@@ -5,12 +5,15 @@ import {
   Question,
   QuestionOption,
   Submission,
+  TestResult,
 } from "@/types"
 import { replaceMap } from "@/utils/replaceMap"
 import session from "@/utils/session"
-import fs from "fs"
 import { HttpError } from "@/utils/httpError"
 
+/**
+ * @deprecated
+ */
 const startSession = async (ip: string) => {
   await session.get(BASE_URL)
   const res = await session.get(routes["api.session"])
@@ -30,7 +33,6 @@ const getSession = async (ip: string) => {
 
 const getPersonalityTest = async (): Promise<Array<Question>> => {
   const res = await session.get(`${BASE_URL}/free-personality-test`)
-  fs.writeFileSync("test.html", res.data)
   const regex = new RegExp(/(:questions=")+([[\S\s]*])(")/, "gm")
   const matches = regex.exec(res.data)
 
@@ -62,7 +64,10 @@ const getPersonalityTest = async (): Promise<Array<Question>> => {
   }))
 }
 
-const getTestResults = async (submissionData: Submission[], gender: Gender) => {
+const getTestResults = async (
+  submissionData: Submission[],
+  gender: Gender
+): Promise<TestResult> => {
   const questions: Array<Omit<Submission, "id"> & { text: string }> =
     submissionData.map((s) => ({
       text: Buffer.from(s.id, "base64url").toString(),
@@ -86,7 +91,7 @@ const getTestResults = async (submissionData: Submission[], gender: Gender) => {
   // console.log(res2.data)
   // fs.writeFileSync("test-results.html", res2.data)
 
-  const regex = new RegExp(/(:test-results=")+({[\S\s]*})(")/, "gm")
+  const regex = new RegExp(/(:test-results=")+({[\S\s].+})/, "gm")
 
   const matches = regex.exec(res2.data)
 
@@ -98,6 +103,8 @@ const getTestResults = async (submissionData: Submission[], gender: Gender) => {
     (acc, [key, value]) => acc.replaceAll(key, value),
     unparsedResults
   )
+
+  console.log(replacedResults)
 
   const results = JSON.parse(replacedResults)
 
