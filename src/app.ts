@@ -4,7 +4,6 @@ import morgan from "morgan"
 import routes from "./routes"
 import { PORT } from "@/config"
 import { HttpError } from "./utils/httpError"
-import path from "path"
 
 const app = express()
 
@@ -14,10 +13,6 @@ app.use(express.urlencoded({ extended: false }))
 app.use(morgan("dev"))
 
 app.use("/api", routes)
-
-app.use("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "../public/api-doc.html"))
-})
 
 app.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
   res.status(err.status || 500).json({
