@@ -1,0 +1,20 @@
+/* JSON Theme */
+
+.__json-pretty__ {
+  color: black !important;
+  background: transparent !important;
+  width: 100%;
+}
+.__json-string__ {
+  color: #d64292 !important;
+}
+.__json-value__ {
+  color: #d64242 !important;
+}
+.__json-key__ {
+  color: #6d50d9 !important;
+}
+
+.link {
+  @apply text-16pBlue hover:text-16pBlue-dark hover:underline transition-all duration-300 ease-in-out;
+}
