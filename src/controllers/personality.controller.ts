@@ -16,7 +16,7 @@ const submit = async (
   const { answers, gender } = req.body
   const result = await personalityService.getTestResults(
     answers as Submission[],
-    gender
+    gender as Gender
   )
   res.json(result)
 }
