@@ -71,7 +71,7 @@ const getTestResults = async (
   const questions: Array<Omit<Submission, "id"> & { text: string }> =
     submissionData.map((s) => ({
       text: Buffer.from(s.id, "base64url").toString(),
-      answer: s.answer,
+      value: s.value,
     }))
 
   const payload = {

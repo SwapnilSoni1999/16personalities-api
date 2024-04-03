@@ -13,6 +13,7 @@ const validator =
       for (const key of keys) {
         const payload = req[key]
         const validator = args[key]
+        console.log({ payload })
 
         if (validator) {
           const result = validator.safeParse(payload)

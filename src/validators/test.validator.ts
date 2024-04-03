@@ -5,7 +5,7 @@ const submission = z.object({
   answers: z.array(
     z.object({
       id: z.string(),
-      answer: z.number(),
+      value: z.number(),
     })
   ),
   gender: z.enum(["Male", "Female", "Other"]),

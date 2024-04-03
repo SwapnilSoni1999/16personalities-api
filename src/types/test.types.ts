@@ -11,7 +11,7 @@ export interface Question {
 
 export interface Submission {
   id: string
-  answer: number
+  value: number
 }
 
 export enum Gender {
