@@ -8,7 +8,7 @@ const submission = z.object({
       answer: z.number(),
     })
   ),
-  gender: z.nativeEnum(Gender),
+  gender: z.enum(["Male", "Female", "Other"]),
 })
 
 export default {
