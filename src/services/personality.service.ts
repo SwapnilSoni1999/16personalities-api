@@ -68,11 +68,12 @@ const getTestResults = async (
   submissionData: Submission[],
   gender: Gender
 ): Promise<TestResult> => {
-  const questions: Array<Omit<Submission, "id"> & { text: string }> =
-    submissionData.map((s) => ({
-      text: Buffer.from(s.id, "base64url").toString(),
-      value: s.value,
-    }))
+  const questions: Array<
+    Omit<Submission, "id" | "value"> & { text: string; answer: number }
+  > = submissionData.map((s) => ({
+    text: Buffer.from(s.id, "base64url").toString(),
+    answer: s.value,
+  }))
 
   const payload = {
     extraData: [],
@@ -103,8 +104,6 @@ const getTestResults = async (
     (acc, [key, value]) => acc.replaceAll(key, value),
     unparsedResults
   )
-
-  console.log(replacedResults)
 
   const results = JSON.parse(replacedResults)
 
