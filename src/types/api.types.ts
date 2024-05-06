@@ -1,3 +1,5 @@
+import { Trait } from "./test.types"
+
 export interface GetTestResultsPayload {
   redirect: string
 }
@@ -91,21 +93,4 @@ export interface Personality {
   link: string
   title: string
   subtitleHtml: string
-}
-
-export interface Trait {
-  key: string
-  label: string
-  color: string
-  score: number
-  pct: number
-  trait: string
-  link: string
-  reverse: boolean
-  reversed: boolean
-  titles: string[]
-  description: string
-  snippet: string
-  imageAlt: string
-  imageSrc: string
 }
