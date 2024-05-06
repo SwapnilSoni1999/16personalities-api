@@ -22,13 +22,16 @@ export enum Gender {
 
 export interface TestResult {
   niceName: string
-  fullCode: string
+  personality: string
+  variant: string
+  role: string
+  strategy: string
+
   avatarSrc: string
   avatarAlt: string
   avatarSrcStatic: string
-  snippet: string
-  scales: string[]
   traits: Trait[]
+  profileUrl: string
 }
 
 export interface Trait {
@@ -40,7 +43,7 @@ export interface Trait {
   trait: string
   link: string
   reverse: boolean
-  titles: null[]
+  titles: string[]
   description: string
   snippet: string
   imageAlt: string

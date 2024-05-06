@@ -4,12 +4,15 @@ import {
   GetTestResultsPayload,
   Question,
   QuestionOption,
+  SessionData,
   Submission,
   TestResult,
+  TraitsResponse,
 } from "@/types"
 import { replaceMap } from "@/utils/replaceMap"
 import session from "@/utils/session"
 import { HttpError } from "@/utils/httpError"
+import { writeFileSync } from "fs"
 
 /**
  * @deprecated
@@ -25,8 +28,14 @@ const startSession = async (ip: string) => {
   return res.data
 }
 
-const getSession = async (ip: string) => {
+const getSession = async (): Promise<SessionData> => {
   const res = await session.get(routes["api.session"])
+
+  return res.data
+}
+
+const getTraits = async (): Promise<TraitsResponse> => {
+  const res = await session.post(routes["api.profile.traits"], {})
 
   return res.data
 }
@@ -87,27 +96,25 @@ const getTestResults = async (
     routes["test-results"],
     payload
   )
-  const res2 = await session.post(res.data.redirect, payload)
 
-  // console.log(res2.data)
-  // fs.writeFileSync("test-results.html", res2.data)
+  await session.post(res.data.redirect, payload)
 
-  const regex = new RegExp(/(:test-results=")+({[\S\s].+})/, "gm")
+  const sess = await getSession()
 
-  const matches = regex.exec(res2.data)
+  const traitsData = await getTraits()
 
-  if (!matches) throw new Error("No matches found")
-
-  const unparsedResults = matches[2]
-
-  const replacedResults = Object.entries(replaceMap).reduce(
-    (acc, [key, value]) => acc.replaceAll(key, value),
-    unparsedResults
-  )
-
-  const results = JSON.parse(replacedResults)
-
-  return results
+  return {
+    avatarAlt: sess.user.avatarAlt,
+    avatarSrc: sess.user.avatar,
+    avatarSrcStatic: sess.user.avatarFull,
+    personality: sess.user.personality,
+    variant: sess.user.variant,
+    niceName: sess.user.localized.niceType,
+    profileUrl: sess.user.localized.profileUrl,
+    traits: traitsData.traits,
+    role: sess.user.role,
+    strategy: sess.user.strategy,
+  }
 }
 
 export default {
