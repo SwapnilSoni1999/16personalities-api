@@ -12,7 +12,6 @@ import {
 import { replaceMap } from "@/utils/replaceMap"
 import session from "@/utils/session"
 import { HttpError } from "@/utils/httpError"
-import { writeFileSync } from "fs"
 
 /**
  * @deprecated
@@ -42,13 +41,13 @@ const getTraits = async (): Promise<TraitsResponse> => {
 
 const getPersonalityTest = async (): Promise<Array<Question>> => {
   const res = await session.get(`${BASE_URL}/free-personality-test`)
-  const regex = new RegExp(/(:questions=")+([[\S\s]*])(")/, "gm")
+  const regex = new RegExp(/:questions="(\[.*?\])"/, "gm")
   const matches = regex.exec(res.data)
 
   if (!matches) throw new Error("No matches found")
 
   // console.log(matches[2])
-  const unparsedQuestions = matches[2]
+  const unparsedQuestions = matches[1]
 
   const replacedQuestions = Object.entries(replaceMap).reduce(
     (acc, [key, value]) => acc.replaceAll(key, value),
