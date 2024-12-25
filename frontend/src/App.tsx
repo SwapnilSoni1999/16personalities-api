@@ -8,13 +8,14 @@ import Footer from "./components/Footer"
 import ModalWrapper from "./components/Modal"
 import { useModal } from "./hooks/useModal"
 import React from "react"
+import SupportModal from "./components/SupportModal"
 
 function App() {
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text)
   }
 
-  const { modals } = useModal()
+  const { modals, open } = useModal()
 
   return (
     <>
@@ -31,13 +32,22 @@ function App() {
                 <a
                   href="https://16personalities.com"
                   target="_blank"
-                  className="link text-white hover:text-16pGreen"
+                  className="link text-white hover:text-16pGreen underline"
                 >
                   16Personalities
                 </a>
                 . It provides endpoints for getting all questions for the
                 personality test and submitting answers to get the result.
               </p>
+              <Button
+                color="white"
+                className="w-min text-nowrap whitespace-nowrap mx-auto"
+                onClick={() => {
+                  open(<SupportModal />)
+                }}
+              >
+                Support me :)
+              </Button>
             </div>
 
             <Card className="max-w-full md:max-w-[75%] w-full flex flex-col gap-y-5">
