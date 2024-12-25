@@ -190,6 +190,11 @@ This project is not affiliated with 16Personalities in any way. It is an unoffic
 
 If you are from 16Personalities and want this project to be taken down, please contact me on my email. (You can find it on my GitHub profile)
 
+### Thanks
+
+- [16Personalities](https://16personalities.com) for the data.
+- [tux](https://github.com/tuxdotrs) - For providing proxy server for the API.
+
 ### License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
