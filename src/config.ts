@@ -450,5 +450,3 @@ const routeConfig = {
 }
 
 export const routes: typeof routeConfig = routeConfig
-
-export const PORT = 3000

@@ -3,3 +3,5 @@ dist/
 *.html
 !api-doc.html
 !index.html
+.env.*
+!.env.example

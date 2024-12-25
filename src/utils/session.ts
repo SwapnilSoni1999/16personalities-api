@@ -1,3 +1,4 @@
+import env from "@/env"
 import { BASE_URL } from "@/config"
 import axios from "axios"
 import { wrapper } from "axios-cookiejar-support"
@@ -29,6 +30,12 @@ const session = wrapper(
     withCredentials: true,
     headers: defaultHeaders,
     baseURL: BASE_URL,
+    proxy: env.USE_PROXY
+      ? {
+          host: env.PROXY_HOST as string,
+          port: env.PROXY_PORT as number,
+        }
+      : false,
   })
 )
 
