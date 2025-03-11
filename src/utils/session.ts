@@ -34,6 +34,10 @@ const session = wrapper(
       ? {
           host: env.PROXY_HOST as string,
           port: env.PROXY_PORT as number,
+          auth: {
+            username: env.PROXY_USERNAME as string,
+            password: env.PROXY_PASSWORD as string,
+          },
           protocol: "http",
         }
       : false,

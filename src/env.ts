@@ -11,6 +11,8 @@ const envSchema = z
     USE_PROXY: z.enum(["true", "false"]).transform((v) => v === "true"),
     PROXY_HOST: z.string().optional(),
     PROXY_PORT: z.coerce.number().optional(),
+    PROXY_USERNAME: z.string().optional(),
+    PROXY_PASSWORD: z.string().optional(),
   })
   .superRefine((data, ctx) => {
     if (data.USE_PROXY) {
